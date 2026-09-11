@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="theme-color" content="#101014" />
+<title>野良カメコマボ</title>
+<style>
+:root{--bg:#0f1015;--panel:#1a1c24;--panel2:#242734;--text:#f5f5f7;--sub:#b8bcc9;--accent:#ffca3a;--danger:#ff5b6e;--ok:#57d38c;--blue:#63a7ff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:#090a0e;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI",sans-serif;overflow-x:hidden}
+body{min-height:100dvh;background:radial-gradient(circle at top,#222532 0,#0c0d12 45%,#07080b 100%)}
+button{font:inherit;color:inherit;border:0;cursor:pointer;touch-action:manipulation;-webkit-appearance:none;appearance:none;position:relative;z-index:20;pointer-events:auto}
+#app{max-width:760px;margin:auto;min-height:100dvh;display:flex;flex-direction:column}
+.screen{display:none;min-height:100dvh;padding:calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 18px)}
+.screen.active{display:flex;flex-direction:column}
+.card{background:linear-gradient(180deg,rgba(39,42,54,.96),rgba(22,24,31,.98));border:1px solid #343847;border-radius:18px;box-shadow:0 18px 50px #0008}
+.title-logo{margin:auto 0 8px;text-align:center}
+.kicker{font-size:12px;letter-spacing:.24em;color:#c5c8d5}.title-logo h1{margin:8px 0 4px;font-size:clamp(38px,12vw,70px);line-height:.95;letter-spacing:-.06em;text-shadow:0 4px 0 #000}.title-logo h1 span{color:var(--accent)}
+.subtitle{color:var(--sub);font-size:14px;line-height:1.65}.hero{padding:24px 20px;text-align:center;position:relative;overflow:hidden;isolation:isolate}.hero:before{pointer-events:none;content:"📷";position:absolute;font-size:160px;opacity:.055;right:-24px;top:-30px;transform:rotate(-14deg)}
+.mabo{font-size:68px;filter:drop-shadow(0 8px 6px #0008)}
+.primary{width:100%;position:relative;z-index:9999;pointer-events:auto;touch-action:manipulation;padding:15px 18px;border-radius:14px;background:linear-gradient(#ffd65d,#ffb824);color:#17130a;font-weight:900;font-size:18px;box-shadow:0 5px 0 #a66d00;margin-top:14px}.primary:active{transform:translateY(3px);box-shadow:0 2px 0 #a66d00}.secondary{padding:12px;border-radius:12px;background:#303443;color:#fff;font-weight:750}.danger{background:#692d36}.small{font-size:12px;color:#8e93a3}.topbar{display:flex;gap:8px;align-items:center;position:sticky;top:0;z-index:4;padding-bottom:8px}.pill{background:#1b1e28;border:1px solid #343847;border-radius:999px;padding:7px 10px;font-size:12px;white-space:nowrap}.pill strong{color:var(--accent)}
+.storybox{padding:17px 16px;margin-bottom:12px;line-height:1.75;font-size:15px}.speaker{font-weight:900;color:var(--accent);margin-bottom:8px}.commands{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:auto}.cmd{min-height:52px;background:#2a2e3b;border:1px solid #3e4354;border-radius:13px;font-weight:800;padding:9px}.cmd:active{background:#3a4050;transform:scale(.985)}.cmd.full{grid-column:1/-1}.cmd.warn{border-color:#7c3a45;color:#ffc2ca}
+.map-title{font-weight:900;font-size:20px;margin:4px 0 10px}.map{position:relative;min-height:420px;padding:12px;background:linear-gradient(135deg,#262a35,#191c24);border-radius:20px;border:1px solid #3a3f50;overflow:hidden}.map:before{content:"つどーむ EVENT HALL";position:absolute;inset:12px auto auto 16px;color:#ffffff15;font-weight:900;font-size:28px;letter-spacing:.08em}.zone{position:absolute;width:43%;min-height:84px;border-radius:16px;padding:12px;border:1px solid #545a6e;background:#2a2f3c;text-align:left;box-shadow:0 10px 25px #0005}.zone b{display:block}.zone small{color:#aeb3c2}.zone.active{outline:3px solid var(--accent);background:#363b49}.z1{left:5%;top:18%}.z2{right:5%;top:21%}.z3{left:9%;bottom:19%}.z4{right:7%;bottom:13%}.center{position:absolute;left:39%;top:45%;width:22%;text-align:center;font-size:35px;opacity:.8}.npc-list{display:flex;gap:8px;overflow:auto;padding:4px 0 8px}.npcchip{flex:0 0 auto;padding:9px 11px;border-radius:999px;background:#252936;border:1px solid #3f4557;font-size:13px}.npcchip.done{border-color:#477a5a;color:#aef1c3}.npcchip.angry{border-color:#7f3944;color:#ffc1c9}
+.npc-card{padding:16px;margin:8px 0 12px}.npc-row{display:flex;gap:13px;align-items:center}.avatar{width:80px;height:80px;border-radius:16px;display:grid;place-items:center;font-size:48px;background:linear-gradient(145deg,#3f4659,#252936);border:1px solid #555d72}.npcname{font-size:21px;font-weight:900}.tag{font-size:11px;padding:3px 7px;border-radius:999px;background:#4b3157;color:#f4c7ff;display:inline-block;margin-top:4px}.meter{height:9px;background:#11131a;border-radius:99px;overflow:hidden;margin-top:8px}.meter>i{display:block;height:100%;background:linear-gradient(90deg,#ff7180,#ffd250,#63db93);width:25%}
+#shootScreen{background:#050607}.camera-ui{position:relative;flex:1;min-height:520px;border-radius:20px;overflow:hidden;background:radial-gradient(circle at 50% 40%,#727889 0,#353947 28%,#151821 68%,#08090d 100%);border:1px solid #3d4251}.stage-person{position:absolute;font-size:118px;left:50%;top:46%;transform:translate(-50%,-50%);filter:drop-shadow(0 14px 12px #0009);transition:transform .08s linear}.stage-bg{position:absolute;inset:0;background:linear-gradient(90deg,transparent 49.5%,#ffffff18 50%,transparent 50.5%),linear-gradient(transparent 49.5%,#ffffff18 50%,transparent 50.5%)}.thirds:before,.thirds:after{content:"";position:absolute;top:0;bottom:0;width:1px;background:#ffffff38}.thirds:before{left:33.333%}.thirds:after{left:66.666%}.thirds i:before,.thirds i:after{content:"";position:absolute;left:0;right:0;height:1px;background:#ffffff38}.thirds i:before{top:33.333%}.thirds i:after{top:66.666%}.focusbox{position:absolute;width:112px;height:150px;border:2px solid #ffd84d;left:50%;top:44%;transform:translate(-50%,-50%);border-radius:8px;box-shadow:0 0 0 999px #00000018}.caminfo{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;font-family:monospace;font-size:12px;text-shadow:0 2px 4px #000}.shootcontrols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}.move{padding:12px;background:#222631;border-radius:12px}.shutter{grid-column:1/-1;margin:5px auto 0;width:82px;height:82px;border-radius:50%;background:#f8f8f8;border:7px solid #555;box-shadow:0 0 0 4px #ddd;font-size:11px;color:#111;font-weight:900}.shots{position:absolute;bottom:12px;left:12px;background:#000a;padding:8px;border-radius:10px;font-size:12px}.flash{position:absolute;inset:0;background:white;opacity:0;pointer-events:none}.flash.fire{animation:flash .16s}@keyframes flash{0%{opacity:.95}100%{opacity:0}}
+.result-photo{height:240px;border-radius:16px;background:linear-gradient(145deg,#596071,#252936);display:grid;place-items:center;font-size:110px;position:relative;overflow:hidden}.result-photo:after{content:"PHOTO BY MABO";position:absolute;bottom:8px;right:10px;font:700 11px monospace;color:#fff9}.score{font-size:42px;font-weight:1000;color:var(--accent);text-align:center}.sns{padding:15px}.post{background:#f7f7f7;color:#111;border-radius:16px;padding:14px;margin-top:10px}.posthead{font-weight:900}.posttext{margin:8px 0;line-height:1.5}.badpost{border:3px solid #ff4f61}.ending{margin:auto 0;text-align:center}.ending h2{font-size:34px;margin:10px 0}.ending .icon{font-size:82px}.good h2{color:#7be2a5}.bad h2{color:#ff7181}.mute{margin-left:auto;background:#20232d;border:1px solid #373b48;border-radius:999px;padding:7px 10px}.hidden{display:none!important}
+
+/* retro adventure visual refresh */
+.screen{background:linear-gradient(#0c1830,#07101f);}
+.card{border-radius:4px;border:3px solid #d7e7ff;background:#081426;box-shadow:0 0 0 2px #0a0d16,0 8px 24px #0009}
+.storybox{font-family:"Hiragino Mincho ProN","Yu Mincho",serif;background:#06111f;border-color:#e6eefc;box-shadow:inset 0 0 0 2px #20395f,0 8px 24px #0008}
+.commands{gap:6px}.cmd{border-radius:2px;background:#10294b;border:2px solid #d8e8ff;box-shadow:inset 0 0 0 2px #244e7b;font-family:"Hiragino Mincho ProN","Yu Mincho",serif}.cmd:active{background:#1d4777}
+.title-logo h1{font-family:"Hiragino Mincho ProN","Yu Mincho",serif;letter-spacing:.02em;text-shadow:3px 3px 0 #000,0 0 18px #264d89}.subtitle,.kicker{font-family:"Hiragino Mincho ProN","Yu Mincho",serif}
+.retro-scene{position:relative;height:255px;pointer-events:none;overflow:hidden;border:4px solid #e2ecff;box-shadow:inset 0 0 0 3px #17345b;background:#5aa1d8;margin:12px 0 16px;image-rendering:pixelated}
+.retro-scene .sky{position:absolute;inset:0;background:linear-gradient(#4b92d0 0 45%,#b9ddf0 46% 52%,#6d986a 53% 100%)}
+.retro-scene .sky:before{content:"";position:absolute;width:70px;height:24px;border-radius:50%;background:#fff9;left:24px;top:38px;box-shadow:42px 8px 0 -5px #fff9,180px -12px 0 5px #fff8}
+.retro-scene .dome{position:absolute;width:260px;height:112px;left:50%;bottom:55px;transform:translateX(-50%);background:linear-gradient(#d6e3e9,#7e9cac);border-radius:140px 140px 12px 12px;border:5px solid #4d6471;box-shadow:inset 0 -18px 0 #6b8798}
+.retro-scene .dome:before{content:"つどーむ";position:absolute;color:#244458;font-weight:900;font-size:22px;left:86px;top:35px;text-shadow:1px 1px #fff8}
+.retro-scene .crowd{position:absolute;left:0;right:0;bottom:30px;height:46px;background:repeating-linear-gradient(90deg,#202b38 0 10px,#bf4c79 10px 18px,#27394a 18px 28px,#d9c451 28px 35px);clip-path:polygon(0 45%,4% 22%,8% 44%,12% 8%,16% 40%,20% 16%,24% 45%,28% 12%,32% 36%,36% 5%,40% 42%,44% 20%,48% 48%,52% 9%,56% 40%,60% 18%,64% 46%,68% 13%,72% 41%,76% 7%,80% 40%,84% 18%,88% 45%,92% 13%,96% 40%,100% 22%,100% 100%,0 100%)}
+.retro-scene .mabo-silhouette{position:absolute;right:24px;bottom:28px;font-size:72px;filter:grayscale(1) contrast(2) brightness(.35) drop-shadow(3px 3px 0 #000)}
+.scene-caption{position:absolute;left:0;right:0;bottom:0;background:#03101edd;color:#fff;padding:7px 10px;font:700 13px "Hiragino Mincho ProN","Yu Mincho",serif;letter-spacing:.04em}
+.hero{padding:18px 16px;background:#071326}.hero:before{display:none}.mabo{display:none}.primary{border-radius:2px;background:#f0d35b;box-shadow:0 4px 0 #806700;border:2px solid #fff3a8}
+.map{border-radius:4px;border:4px solid #dceaff;background:linear-gradient(#3c6688,#29445f);box-shadow:inset 0 0 0 3px #152b45}.zone{border-radius:2px;border:2px solid #e5efff;background:#0e2947;box-shadow:3px 3px 0 #07101b}.zone.active{outline:3px solid #ffd951;background:#19416c}
+.npc-card{border-radius:3px}.avatar{border-radius:2px;border:3px solid #e7efff;background:linear-gradient(#7fa8c9,#34516e)}
+.camera-ui{border-radius:3px;border:4px solid #dceaff}.result-photo{border-radius:3px;border:4px solid #dceaff}
+
+@media(max-width:390px){.map{min-height:390px}.zone{font-size:13px;min-height:78px}.camera-ui{min-height:460px}.stage-person{font-size:100px}}
+</style>
+</head>
+<body>
+<div id="app">
+<section id="titleScreen" class="screen active">
+  <div class="title-logo">
+    <div class="kicker">COMMAND ADVENTURE</div>
+    <h1>野良カメコ<span>マボ</span></h1>
+    <div class="subtitle">― おでライ札幌・つどーむ編 ―</div>
+  </div>
+  <div class="hero card">
+    <div class="mabo">🤓📷</div>
+    <div class="retro-scene title-scene"><div class="sky"></div><div class="dome"></div><div class="crowd"></div><div class="mabo-silhouette">📷</div><div class="scene-caption">札幌・つどーむ――コスプレイベント当日</div></div>
+    <p><b>主人公・マボ。</b><br>うだつの上がらないキモオタ野良カメコ。<br>知名度なし、交流力なし、あるのはカメラと妙な執念だけ。</p>
+    <p class="subtitle">今日こそレイヤーさんに「また撮ってください」と言われたい。<br>そしていつの日か、界隈で名の知れたカメラマンに成り上がるのだ。</p>
+    <button id="startBtn" class="primary" type="button">▶ はじめから</button>
+    <div class="small" style="margin-top:12px">※「はじめから」を押すと音楽が開始します。音量に注意。</div>
+  </div>
+</section>
+
+<section id="mapScreen" class="screen">
+ <div class="topbar"><div class="pill">📸 名声 <strong id="fameText">0</strong></div><div class="pill">⚠ 警戒 <strong id="riskText">0</strong></div><div class="pill">🎯 写真 <strong id="photoText">0</strong></div><button id="muteBtn" class="mute">🔊</button></div>
+ <div class="card storybox"><div class="speaker">MISSION 01</div>レイヤーさんを撮影し、写真を渡せ。<br><b>その写真を本人のSNSに掲載してもらえればクリア。</b></div>
+ <div class="map-title">つどーむ会場マップ</div>
+ <div class="map">
+  <button class="zone z1" data-zone="entrance"><b>① 入場口付近</b><small>初心者レイヤーが多い</small></button>
+  <button class="zone z2" data-zone="wall"><b>② 壁撮りエリア</b><small>人気レイヤーが集まる</small></button>
+  <button class="zone z3" data-zone="booth"><b>③ サークル側</b><small>人通りが多い</small></button>
+  <button class="zone z4" data-zone="rest"><b>④ 休憩エリア</b><small>声かけは慎重に</small></button>
+  <div class="center">🏟️</div>
+ </div>
+ <div class="npc-list" id="npcList"></div>
+</section>
+
+<section id="talkScreen" class="screen">
+ <div class="topbar"><button id="backMap" class="secondary">← マップ</button><div class="pill">好感度 <strong id="affText">0</strong></div><div class="pill">警戒 <strong id="talkRiskText">0</strong></div><button id="muteBtn2" class="mute">🔊</button></div>
+ <div id="npcCard" class="npc-card card"></div>
+ <div id="dialog" class="storybox card"></div>
+ <div id="commands" class="commands"></div>
+</section>
+
+<section id="shootScreen" class="screen">
+ <div class="topbar"><div class="pill">撮影モード</div><div class="pill">残り <strong id="shotRemain">5</strong>枚</div><button id="muteBtn3" class="mute">🔊</button></div>
+ <div class="camera-ui" id="cameraUI">
+   <div class="stage-bg thirds"><i></i></div>
+   <div class="stage-person" id="subject">🧙‍♀️</div>
+   <div class="focusbox" id="focusbox"></div>
+   <div class="caminfo"><span>1/250  F2.8  ISO800</span><span id="poseText">POSE: 1</span></div>
+   <div class="shots">BEST <b id="bestScore">0</b></div>
+   <div class="flash" id="flash"></div>
+ </div>
+ <div class="shootcontrols">
+  <button class="move" data-move="left">◀ 構図 左</button><button class="move" data-move="pose">✨ ポーズ指示</button><button class="move" data-move="right">構図 右 ▶</button>
+  <button class="move" data-move="up">▲ 寄る</button><button class="move" data-move="center">◎ 中央</button><button class="move" data-move="down">▼ 引く</button>
+  <button id="shutterBtn" class="shutter">SHUTTER</button>
+ </div>
+ <div class="small" style="text-align:center;margin-top:8px">被写体は少しずつ動く。構図とタイミングを合わせてシャッターを切れ！</div>
+</section>
+
+<section id="photoResultScreen" class="screen">
+ <div class="topbar"><div class="pill">撮影結果</div><button id="muteBtn4" class="mute">🔊</button></div>
+ <div class="card" style="padding:16px">
+  <div class="result-photo" id="resultPhoto">🧙‍♀️</div>
+  <div class="score" id="finalScore">82</div>
+  <div id="photoComment" class="subtitle" style="text-align:center"></div>
+  <button id="givePhotoBtn" class="primary">写真をレイヤーさんに渡す</button>
+  <button id="retakeBtn" class="secondary" style="width:100%;margin-top:9px">撮り直しに戻る</button>
+ </div>
+</section>
+
+<section id="snsScreen" class="screen">
+ <div class="topbar"><div class="pill">SNSを確認中…</div><button id="muteBtn5" class="mute">🔊</button></div>
+ <div class="card sns" id="snsCard"></div>
+</section>
+
+<section id="endingScreen" class="screen">
+ <div class="ending" id="endingBox"></div>
+ <button id="restartBtn" class="primary">もう一度プレイ</button>
+</section>
+</div>
+<script>
+'use strict';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const screens=['titleScreen','mapScreen','talkScreen','shootScreen','photoResultScreen','snsScreen','endingScreen'];
+function show(id){screens.forEach(x=>$('#'+x).classList.toggle('active',x===id)); window.scrollTo(0,0)}
+let state={fame:0,risk:0,photos:0,current:null,shots:5,best:0,muted:false,zone:null};
+const npcs={
+ rin:{name:'りんね',emoji:'🧙‍♀️',cos:'魔法少女',zone:'entrance',diff:1,aff:0,status:'new',intro:'初参加らしく、少し緊張している。撮影列はまだない。'},
+ yuna:{name:'ユナ',emoji:'🦸‍♀️',cos:'SFヒロイン',zone:'wall',diff:3,aff:0,status:'new',intro:'フォロワー多めの人気レイヤー。すでに数人のカメラマンが並んでいる。'},
+ mio:{name:'みお',emoji:'🧝‍♀️',cos:'エルフ',zone:'booth',diff:2,aff:0,status:'new',intro:'友達と参加中。撮影はOKそうだが、礼儀に厳しそうだ。'},
+ aya:{name:'あやめ',emoji:'🥷',cos:'忍者',zone:'rest',diff:2,aff:0,status:'new',intro:'休憩中。今すぐ声をかけると嫌がられるかもしれない。'}
+};
+
+// --- Audio engine: iPhone Safari unlock + synthesized multi-scene BGM ---
+let AC=null, master=null, musicTimer=null, currentTheme='', audioReady=false;
+function unlockAudio(){
+  try{
+    if(!AC){
+      const Ctx=window.AudioContext||window.webkitAudioContext;
+      if(!Ctx) return Promise.resolve(false);
+      AC=new Ctx();
+      master=AC.createGain();
+      master.gain.value=.24;
+      master.connect(AC.destination);
+    }
+    // Mark ready immediately so notes can be scheduled from this exact tap.
+    audioReady=true;
+    const ping=()=>{
+      try{
+        const o=AC.createOscillator(), g=AC.createGain();
+        o.frequency.value=660; o.type='square';
+        g.gain.setValueAtTime(.05,AC.currentTime);
+        g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+.055);
+        o.connect(g); g.connect(master); o.start(); o.stop(AC.currentTime+.06);
+      }catch(e){}
+    };
+    ping();
+    if(AC.state==='running') return Promise.resolve(true);
+    const r=AC.resume();
+    if(r&&typeof r.then==='function') return r.then(()=>{ping();return true}).catch(()=>false);
+    return Promise.resolve(AC.state==='running');
+  }catch(e){console.error('audio unlock failed',e);return Promise.resolve(false)}
+}
+function stopMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=null}}
+const themes={
+ title:{tempo:330,notes:[60,64,67,72,67,64,62,67],bass:[48,48,50,55]},
+ map:{tempo:260,notes:[64,67,69,71,69,67,64,62],bass:[45,52,47,50]},
+ talk:{tempo:380,notes:[69,72,76,74,72,69,67,69],bass:[45,48,52,50]},
+ shoot:{tempo:150,notes:[57,64,69,64,60,67,72,67],bass:[33,40,36,43]},
+ danger:{tempo:210,notes:[54,55,54,50,54,58,55,50],bass:[30,30,29,26]},
+ clear:{tempo:220,notes:[60,64,67,72,76,79,84,79],bass:[48,52,55,60]},
+ bad:{tempo:360,notes:[48,47,43,41,38,36,35,31],bass:[36,35,31,29]}
+};
+function note(n,d=.12,type='square',vol=.035,when=0){
+ if(!AC||!audioReady||state.muted)return;
+ const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+when;
+ o.type=type;o.frequency.setValueAtTime(440*Math.pow(2,(n-69)/12),t);
+ g.gain.setValueAtTime(Math.max(.0001,vol),t);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+ o.connect(g);g.connect(master);o.start(t);o.stop(t+d+.02);
+}
+function playTheme(name){
+ if(!audioReady||!AC)return;
+ if(currentTheme===name&&musicTimer)return;
+ stopMusic();currentTheme=name;const t=themes[name];if(!t)return;let i=0;
+ const tick=()=>{
+   if(!audioReady||state.muted)return;
+   const n=t.notes[i%t.notes.length], beat=t.tempo/1000;
+   note(n,beat*.72,i%2?'square':'triangle',i%4===0?.055:.035);
+   note(n+12,beat*.20,'sine',.012,.02);
+   if(i%2===0)note(t.bass[(i/2)%t.bass.length|0],beat*.85,'triangle',.04);
+   if(i%4===2)note(84,beat*.08,'square',.012);
+   i++;
+ };
+ tick();musicTimer=setInterval(tick,t.tempo);
+}
+function sfx(kind){
+ if(!audioReady)return;
+ if(kind==='click'){note(76,.045,'square',.05)}
+ if(kind==='shutter'){note(88,.025,'square',.10);setTimeout(()=>note(52,.06,'sawtooth',.08),24)}
+ if(kind==='ok'){[72,76,79].forEach((n,i)=>setTimeout(()=>note(n,.16,'triangle',.06),i*70))}
+ if(kind==='bad'){[48,44,40,35].forEach((n,i)=>setTimeout(()=>note(n,.23,'sawtooth',.065),i*90))}
+}
+function toggleMute(){
+ state.muted=!state.muted;
+ if(!state.muted&&!audioReady)unlockAudio().then(ok=>{if(ok)playTheme(currentTheme||'map')});
+ $$('.mute').forEach(b=>b.textContent=state.muted?'🔇':'🔊');
+ if(master)master.gain.value=state.muted?0:.24;
+ if(!state.muted)playTheme(currentTheme||'map');
+}
+$$('.mute').forEach(b=>b.addEventListener('click',toggleMute));
+
+function reset(){state={fame:0,risk:0,photos:0,current:null,shots:5,best:0,muted:state.muted,zone:null};Object.values(npcs).forEach(n=>{n.aff=0;n.status='new'});updateHUD();renderNPCList()}
+function updateHUD(){$('#fameText').textContent=state.fame;$('#riskText').textContent=state.risk;$('#photoText').textContent=state.photos}
+function renderNPCList(){let el=$('#npcList');el.innerHTML='';Object.entries(npcs).forEach(([id,n])=>{let d=document.createElement('div');d.className='npcchip '+(n.status==='done'?'done':n.status==='angry'?'angry':'');d.textContent=`${n.emoji} ${n.name} ${n.status==='done'?'✓':n.status==='angry'?'⚠':''}`;el.appendChild(d)})}
+function enterMap(){show('mapScreen');playTheme('map');updateHUD();renderNPCList()}
+
+function startGame(ev){
+  if(ev){ev.preventDefault();ev.stopPropagation();}
+  const b=$('#startBtn');
+  if(b)b.textContent='START!';
+  reset();
+  // Never block game start on iOS audio startup.
+  const audioPromise=unlockAudio();
+  enterMap();
+  try{sfx('ok')}catch(e){}
+  Promise.resolve(audioPromise).then(ok=>{if(ok){playTheme('map')}});
+  return false;
+}
+
+// Robust iPhone/embedded-preview input binding: no inline handlers.
+let startLocked=false;
+const startBtn=$('#startBtn');
+function startFromUserGesture(ev){
+  if(ev){ev.preventDefault();ev.stopPropagation();}
+  if(startLocked)return;
+  startLocked=true;
+  startGame(ev);
+  setTimeout(()=>{startLocked=false},500);
+}
+startBtn.addEventListener('click',startFromUserGesture,{passive:false});
+startBtn.addEventListener('touchend',startFromUserGesture,{passive:false});
+startBtn.addEventListener('pointerup',e=>{ if(e.pointerType!=='touch') startFromUserGesture(e); },{passive:false});
+
+$('#restartBtn').addEventListener('click',()=>{if(!audioReady)unlockAudio();reset();show('titleScreen');playTheme('title')});
+
+$$('.zone').forEach(btn=>btn.addEventListener('click',()=>{sfx('click');state.zone=btn.dataset.zone;$$('.zone').forEach(z=>z.classList.toggle('active',z===btn));let candidates=Object.entries(npcs).filter(([id,n])=>n.zone===state.zone&&n.status!=='angry'); if(!candidates.length)return; openNPC(candidates[0][0])}));
+$('#backMap').addEventListener('click',enterMap);
+
+function openNPC(id){state.current=id;let n=npcs[id];show('talkScreen');playTheme('talk');renderTalk('intro')}
+function npcCard(n){return `<div class="npc-row"><div class="avatar">${n.emoji}</div><div><div class="npcname">${n.name}</div><span class="tag">${n.cos}</span><div class="small">難易度 ★${'★'.repeat(n.diff-1)}</div></div></div><div class="meter"><i style="width:${Math.max(3,Math.min(100,25+n.aff*12))}%"></i></div>`}
+function renderTalk(stage){let n=npcs[state.current];$('#npcCard').innerHTML=npcCard(n);$('#affText').textContent=n.aff;$('#talkRiskText').textContent=state.risk;let dialog=$('#dialog'),cmd=$('#commands');cmd.innerHTML='';
+ const add=(txt,fn,cls='')=>{let b=document.createElement('button');b.className='cmd '+cls;b.textContent=txt;b.onclick=()=>{sfx('click');fn()};cmd.appendChild(b)};
+ if(stage==='intro'){
+  dialog.innerHTML=`<div class="speaker">マボ（心の声）</div>${n.intro}<br><br>「どうする俺……。こういう時、自然に声をかけられる陽キャカメラマンが憎い。」`;
+  if(state.current==='aya'){
+   add('少し離れて待つ',()=>{n.aff+=1;renderTalk('approach')});add('休憩中だけど突撃する',()=>badChoice('休憩中にしつこく声をかけた。'));
+  } else {add('まず挨拶する',()=>{n.aff+=1;renderTalk('approach')});add('無言でカメラを構える',()=>badChoice('いきなりカメラを向けた。'))}
+  add('衣装をじろじろ見る',()=>badChoice('視線が完全に不審者だった。'),'warn');add('いったん様子を見る',()=>{dialog.innerHTML='<div class="speaker">マボ</div>「焦るな……俺は野良だ。だが獣ではない。」';state.fame+=0});
+ }
+ if(stage==='approach'){
+  dialog.innerHTML=`<div class="speaker">マボ</div>「こんにちは。もし今お時間大丈夫でしたら、${n.cos}のお写真を撮らせていただいてもいいですか？」<br><br><div class="speaker">${n.name}</div>「はい、大丈夫ですよ。」`;
+  add('ありがとうございます！',()=>{n.aff+=2;renderTalk('preShoot')});add('SNSフォロワー何人？',()=>badChoice('初対面で数字を聞いて空気が凍った。'));add('名刺を渡す',()=>{n.aff+=1;state.fame+=1;renderTalk('preShoot')});add('俺、上手いんで',()=>{n.aff-=2;state.risk+=2;renderTalk('preShoot')},'warn');
+ }
+ if(stage==='preShoot'){
+  dialog.innerHTML=`<div class="speaker">${n.name}</div>「どんな感じで撮ります？」<br><br><div class="speaker">マボ（心の声）</div>ここだ。キモオタ野良カメコから、“ちゃんと撮れる人”への第一歩……！`;
+  add('自然な立ち姿でお願いします',()=>startShoot());add('作品っぽい決めポーズを相談',()=>{n.aff+=1;startShoot()});add('とりあえずセクシーなの',()=>badChoice('距離感を完全に間違えた。'),'warn');add('無言で連写開始',()=>badChoice('許可は撮ったがコミュニケーションを放棄した。'),'warn');
+ }
+}
+function badChoice(reason){let n=npcs[state.current];n.status='angry';state.risk+=5;sfx('bad');playTheme('danger');endBad(reason)}
+
+let shoot={x:0,y:0,scale:1,pose:1,t:0,raf:0};
+function startShoot(){show('shootScreen');playTheme('shoot');state.shots=5;state.best=0;shoot={x:0,y:0,scale:1,pose:1,t:0,raf:0};$('#shotRemain').textContent=5;$('#bestScore').textContent=0;$('#subject').textContent=npcs[state.current].emoji;animateSubject()}
+function animateSubject(){cancelAnimationFrame(shoot.raf);const loop=()=>{shoot.t+=.018;let drift=Math.sin(shoot.t)*26;$('#subject').style.left=`calc(50% + ${shoot.x+drift}px)`;$('#subject').style.top=`calc(46% + ${shoot.y+Math.sin(shoot.t*.7)*9}px)`;$('#subject').style.transform=`translate(-50%,-50%) scale(${shoot.scale}) rotate(${Math.sin(shoot.t*.5)*1.5}deg)`;shoot.raf=requestAnimationFrame(loop)};loop()}
+$$('.move').forEach(b=>b.addEventListener('click',()=>{sfx('click');let m=b.dataset.move;if(m==='left')shoot.x-=18;if(m==='right')shoot.x+=18;if(m==='up')shoot.scale=Math.min(1.35,shoot.scale+.08);if(m==='down')shoot.scale=Math.max(.72,shoot.scale-.08);if(m==='center'){shoot.x=0;shoot.y=0;shoot.scale=1}if(m==='pose'){shoot.pose=shoot.pose%3+1;$('#poseText').textContent='POSE: '+shoot.pose;shoot.y=[0,-5,8][shoot.pose-1]}}));
+$('#shutterBtn').addEventListener('click',()=>{if(state.shots<=0)return;sfx('shutter');$('#flash').classList.remove('fire');void $('#flash').offsetWidth;$('#flash').classList.add('fire');let drift=Math.sin(shoot.t)*26;let centerPenalty=Math.abs(shoot.x+drift)*.8;let scalePenalty=Math.abs(shoot.scale-1.02)*75;let poseBonus=shoot.pose===2?7:shoot.pose===3?4:2;let luck=Math.random()*14;let score=Math.max(20,Math.min(100,Math.round(96-centerPenalty-scalePenalty+poseBonus-luck)));state.best=Math.max(state.best,score);state.shots--;$('#shotRemain').textContent=state.shots;$('#bestScore').textContent=state.best;if(state.shots===0)setTimeout(finishShoot,450)});
+function finishShoot(){cancelAnimationFrame(shoot.raf);state.photos++;let n=npcs[state.current];let bonus=n.aff*3;state.best=Math.min(100,state.best+bonus);show('photoResultScreen');playTheme('talk');$('#resultPhoto').textContent=n.emoji;$('#finalScore').textContent=state.best+'点';let c=state.best>=88?'これは……かなり良い！ 表情・構図ともに決まった。':state.best>=72?'十分使える一枚。丁寧に仕上げれば喜んでもらえそう。':'ピントは来ているが、構図が惜しい。SNS掲載には少し弱いかも。';$('#photoComment').textContent=c;updateHUD()}
+$('#retakeBtn').addEventListener('click',startShoot);
+$('#givePhotoBtn').addEventListener('click',()=>{sfx('ok');snsOutcome()});
+function snsOutcome(){show('snsScreen');let n=npcs[state.current];let total=state.best+n.aff*4-state.risk*2;$('#snsCard').innerHTML=`<div class="speaker">マボ</div>「現像した写真、DMで送った……。既読はついた。さて……」<div class="subtitle">マボはスマホを握りしめ、5分おきにSNSを更新した。</div>`;playTheme('danger');setTimeout(()=>{if(total>=78){n.status='done';state.fame+=10;playTheme('clear');sfx('ok');$('#snsCard').innerHTML=`<div class="post"><div class="posthead">${n.emoji} ${n.name} @cos_${n.name}</div><div class="posttext">おでライ札幌お疲れさまでした✨<br>素敵に撮っていただきました！📷<br><b>Photo：マボさん</b></div><div class="small">♡ 184　↻ 32</div></div><div class="storybox"><div class="speaker">マボ（心の声）</div>載った……！ 俺の写真が、レイヤーさん本人のアカウントに……！<br>名もなき野良カメコ・マボの成り上がりが、今ここから始まる。</div><button id="missionCompleteBtn" class="primary">MISSION COMPLETE</button>`}else if(total>=58){playTheme('talk');$('#snsCard').innerHTML=`<div class="storybox"><div class="speaker">${n.name}からDM</div>「ありがとうございます！保存しました😊」<br><br><div class="speaker">マボ</div>……だが、投稿はされない。<br>まだ“掲載される写真”には届かなかった。</div><button id="retryExploreBtn" class="primary">別のレイヤーさんを探す</button>`}else{endBad('送った写真の出来と現場での距離感が悪く、DM対応まで不審に思われた.')}
+  const mc=$('#missionCompleteBtn'); if(mc){mc.addEventListener('click',endGood);mc.addEventListener('touchend',e=>{e.preventDefault();endGood()},{passive:false})}
+  const re=$('#retryExploreBtn'); if(re){re.addEventListener('click',enterMap);re.addEventListener('touchend',e=>{e.preventDefault();enterMap()},{passive:false})}
+},1450)}
+window.endGood=function(){show('endingScreen');playTheme('clear');$('#endingBox').className='ending good';$('#endingBox').innerHTML=`<div class="icon">🏆📷</div><h2>MISSION COMPLETE</h2><p>「写真を掲載してもらう」達成！</p><div class="card storybox">フォロワー0に等しかったマボのアカウントに、初めてレイヤー界隈から通知が飛んでくる。<br><br><b>「この人の写真、いいかも」</b><br><br>まだ誰も“有名カメラマン”とは呼ばない。<br>だがキモオタ野良カメコ・マボは、確かに一段だけ上へ登った。<br><br><b>次章：壁撮りエリアの人気レイヤーを攻略せよ！</b></div>`}
+function endBad(reason){show('endingScreen');playTheme('bad');$('#endingBox').className='ending bad';$('#endingBox').innerHTML=`<div class="icon">📱⚠️</div><h2>BAD END</h2><div class="post badpost"><div class="posthead">⚠️ 注意喚起</div><div class="posttext">本日のイベントで、距離感のおかしいカメラマンがいました。<br>大きめのカメラ／黒っぽい服装／名乗りは「マボ」。参加される方はお気をつけください。</div><div class="small">♡ 1,842　↻ 3,760</div></div><div class="storybox"><b>原因：</b>${reason}<br><br>マボは画面を見たまま固まった。<br>成り上がるどころか、一夜にして“別の意味で有名”になった。</div>`}
+</script>
+</body>
+</html>
